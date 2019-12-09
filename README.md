@@ -1,6 +1,6 @@
-# pld-naturales-simulacion-client-java
+# fico-score-insurance-simulacion-client-php
 
-Devuelve las coinicidencias de las personas que se encuentran en listas nacionales e internacionales de Prevención de Lavado de Dinero (entorno de simulación).
+Determina la probabilidad de incumplimiento de un acreditado en los próximos doce meses (entorno de simulación).
 
 ## Requisitos
 
@@ -38,13 +38,13 @@ Al iniciar sesión seguir os siguientes pasos:
 
 ### Paso 2. Capturar los datos de la petición
 
-Los siguientes datos a modificar se encuentran en ***src/test/java/io/PLDNaturalesSimulacion/client/api/ApiTest.java***
+Los siguientes datos a modificar se encuentran en ***src/test/java/io/FicoScoreInsuranceSimulacion/client/api/ApiTest.java***
 
 Es importante contar con el setUp() que se encargará de inicializar la url. Modificar la URL ***('the_url')***, como se muestra en el siguiente fragmento de código:
 
 ```java
 private Logger logger = LoggerFactory.getLogger(ApiTest.class.getName());
-private final PldNaturalesSimulacionApi api = new PldNaturalesSimulacionApi();    
+private final FicoScoreInsuranceApi api = new FicoScoreInsuranceApi();
 private ApiClient apiClient = null; 
 
 @Before()
@@ -56,34 +56,45 @@ public void setUp() {
             .readTimeout(60, TimeUnit.SECONDS)
             .build();
     apiClient.setHttpClient(okHttpClient);  
-}
+}  
 ```
 
 De igual manera, en el archivo **ApiTest**, se deberá modificar el siguiente fragmento de código con los datos correspondientes:
 
 ```java
 @Test
-public void pldTest() throws ApiException {
+public void getFicoscoreTest() throws ApiException {
     String xApiKey = "your_api_key";
-    Peticion persona = new Peticion();
     
-    persona.setFolioOtorgante("000008");
-    persona.setTipoDocumento("01");
-    persona.setNumeroDocumento("01");
-    persona.setNombre("Maria");
-    persona.setSegundoNombre(null);
-    persona.setApellidoPaterno("Sanchez");
-    persona.setApellidoMaterno("Mathews");
+    Persona requestPersona = new Persona();
+    Domicilio requestDomicilio = new Domicilio();
+
+    requestDomicilio.setDireccion(null);
+    requestDomicilio.setColonia(null);
+    requestDomicilio.setCiudad(null);
+    requestDomicilio.setCodigoPostal(null);
+    requestDomicilio.setMunicipio(null);
+    requestDomicilio.setEstado(EstadoEnum.AGS);
+
+    requestPersona.setPrimerNombre("ROBERTO");
+    requestPersona.setSegundoNombre(null);
+    requestPersona.setApellidoPaterno("SAHAGUN");
+    requestPersona.setApellidoMaterno("ZARAGOZA");
+    requestPersona.setApellidoAdicional(null);
+    requestPersona.setFechaNacimiento("2001-01-01");
+    requestPersona.setRfc(null);
+    requestPersona.setCurp(null);
+    requestPersona.setDomicilio(requestDomicilio);
     
     try {
-        Respuesta response = api.pld(xApiKey, persona);
+        Respuesta response = api.getFicoscore(xApiKey, requestPersona);
         Assert.assertTrue(response != null);
         if(response != null) {
             logger.info(response.toString());
         }
     } catch (ApiException e) {
         logger.info(e.getResponseBody());
-    }
+    }        
 }
 ```
 
